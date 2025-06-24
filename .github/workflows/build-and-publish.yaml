@@ -27,8 +27,11 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore --no-cache --force-evaluate
         
+      - name: Build solution
+        run: dotnet build Common.sln --configuration Release --no-restore
+        
       - name: Run tests
-        run: dotnet test Common.sln --configuration Release --no-restore
+        run: dotnet test Common.sln --configuration Release --no-build --no-restore
 
       - name: Pack NuGet packages
         run: dotnet pack Common.sln --configuration Release --no-build --output ./packages /p:Version=${{ env.Major }}.${{ env.Minor }}.${{ env.Version }}
