@@ -1,0 +1,62 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  name: Azure Pipelines
+  vmImage: 'windows-latest' #comes with multiple .net SDKs pre-installed
+
+variables:
+  Major: '1'
+  Minor: '0'
+  Revision: $[counter(variables['minor'], 1)]
+  Version: '$(Major).$(Minor).$(Revision)'
+
+stages:
+  - stage: Publish
+    displayName: 'Publish Stage'
+    jobs:
+      - job: Build
+        displayName: 'Build Nuget Packages'
+        steps:
+          - checkout: self
+              
+          - task: DotNetCoreCLI@2
+            displayName: 'Restore for build'
+            inputs:
+              command: restore
+              projects: '**/*.sln'
+              feedsToUse: 'config'
+              nugetConfigPath: 'nuget.config'
+              restoreArguments: '--no-cache --force-evaluate'
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Test'
+            inputs:
+              command: test
+              projects: "*Testing/*.csproj"
+              arguments: >-
+                --no-restore
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Package'
+            inputs:
+              command: 'pack'
+              packagesToPack: 'Http/Http.csproj;JsonSerialization/JsonSerialization.csproj;KeyVault/KeyVault.csproj;Host/Host.csproj;Jwt/Jwt.csproj;Environment/Environment.csproj'
+              arguments: >
+                --configuration Release
+                --output $(Build.ArtifactStagingDirectory)
+                --no-restore
+                --version ${{ variables.Version }}
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Push'
+            inputs:
+              command: 'push'
+              packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+              nuGetFeedType: 'internal'
+              feedsToUse: 'select'
+              vstsFeed: 'fe465d75-26da-49ad-a7a3-e678aee2012d'
+              publishVstsFeed: 'fe465d75-26da-49ad-a7a3-e678aee2012d'
+              allowPackageConflicts: false

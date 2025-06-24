@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      Major: '1'
+      Minor: '0'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+          source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ github.token }}
+
+      - name: Restore dependencies
+        run: dotnet restore --no-cache --force-evaluate
+        
+      - name: Run tests
+        run: dotnet test Common.sln --configuration Release --no-restore
+
+      - name: Pack NuGet packages
+        run: dotnet pack Common.sln --configuration Release --no-build --output ./packages /p:Version=${{ env.Major }}.${{ env.Minor }}.${{ github.run_number }}
+
+      - name: Push NuGet packages
+        run: dotnet nuget push "packages/*.nupkg" --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ github.token }} --skip-duplicate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <PackageId>Common.Host</PackageId>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Description>Provides serialisation, keyvault, logging and configuration packages for application hosts</Description>
+        <AssemblyName>Common.Host</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\JsonSerialization\JsonSerialization.csproj" />
+      <ProjectReference Include="..\KeyVault\KeyVault.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Observability.Logging.Serilog" Version="1.0.3" />
+      <PackageReference Include="Observability.Logging.Serilog.ApplicationInsights" Version="1.0.3" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.6" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.6" />
+    </ItemGroup>
+
+</Project>

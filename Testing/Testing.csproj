@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Testing.Bdd" Version="1.0.3" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+      <PackageReference Include="Moq.Contrib.HttpClient" Version="1.4.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Http\Http.csproj" />
+      <ProjectReference Include="..\JsonSerialization\JsonSerialization.csproj" />
+      <ProjectReference Include="..\KeyVault\KeyVault.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="HttpExtensionsSteps.cs">
+        <DependentUpon>HttpExtensionsShould.cs</DependentUpon>
+      </Compile>
+      <Compile Update="JsonSerializationSteps.cs">
+        <DependentUpon>JsonSerializationShould.cs</DependentUpon>
+      </Compile>
+      <Compile Update="HttpRetrySteps.cs">
+        <DependentUpon>HttpRetryShould.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CommonEnvironmentExtensionsSteps.cs">
+        <DependentUpon>CommonEnvironmentExtensionsShould.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
