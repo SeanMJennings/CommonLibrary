@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{6B
 		.gitignore = .gitignore
 		nuget.config = nuget.config
 		README.md = README.md
+		.github\workflows\build-and-publish.yaml = .github\workflows\build-and-publish.yaml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{20D16B71-2F08-417F-8367-78F10963E311}"

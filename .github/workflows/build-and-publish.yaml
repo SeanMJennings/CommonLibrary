@@ -1,4 +1,4 @@
-name: CI
+name: Build and Publish NuGet Packages
 
 on:
   push:
@@ -11,6 +11,7 @@ jobs:
     env:
       Major: '1'
       Minor: '0'
+      Version: '1.0.${{ github.run_number }}'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,9 +31,9 @@ jobs:
         run: dotnet test Common.sln --configuration Release --no-restore
 
       - name: Pack NuGet packages
-        run: dotnet pack Common.sln --configuration Release --no-build --output ./packages /p:Version=${{ env.Major }}.${{ env.Minor }}.${{ github.run_number }}
+        run: dotnet pack Common.sln --configuration Release --no-build --output ./packages /p:Version=${{ env.Major }}.${{ env.Minor }}.${{ env.Version }}
 
       - name: Push NuGet packages
-        run: dotnet nuget push "packages/*.nupkg" --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ github.token }} --skip-duplicate
+        run: dotnet nuget push "packages/*.nupkg" --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ env.Version }} --skip-duplicate
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
