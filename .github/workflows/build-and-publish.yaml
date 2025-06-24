@@ -11,7 +11,7 @@ jobs:
     env:
       Major: '1'
       Minor: '0'
-      Version: '1.0.${{ github.run_number }}'
+      Version: '${{ github.run_number }}'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
