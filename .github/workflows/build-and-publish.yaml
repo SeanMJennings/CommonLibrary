@@ -40,6 +40,4 @@ jobs:
         run: dotnet pack Common.sln --configuration Release --no-build --output ./packages /p:Version=${{ env.Major }}.${{ env.Minor }}.${{ env.Version }}
 
       - name: Push NuGet packages
-        run: dotnet nuget push "packages/*.nupkg" --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ env.Version }} --skip-duplicate
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget push "packages/*.nupkg" --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ github.token }} --skip-duplicate
