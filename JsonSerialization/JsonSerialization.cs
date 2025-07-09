@@ -1,20 +1,21 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 // ReSharper disable once CheckNamespace
 public static class JsonSerialization
 {
-    private static readonly DefaultContractResolver ContractResolver = new()
+    private static readonly JsonSerializerOptions DefaultOptions = new()
     {
-        NamingStrategy = new DefaultNamingStrategy()
+        PropertyNamingPolicy = null,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
     
-    public static void UseDefaultNamingStrategy() => ContractResolver.NamingStrategy = new CamelCaseNamingStrategy();
-    public static void UseCamelCaseNamingStrategy() => ContractResolver.NamingStrategy = new CamelCaseNamingStrategy();
+    public static void UseDefaultNamingStrategy() => DefaultOptions.PropertyNamingPolicy = null;
+    public static void UseCamelCaseNamingStrategy() => DefaultOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     
-    public static string Serialize(object theObject) => JsonConvert.SerializeObject(theObject, GetJsonSerializerSettings());
-    public static T Deserialize<T>(string theJson) => JsonConvert.DeserializeObject<T>(theJson, GetJsonSerializerSettings())!;
-    public static object? Deserialize(string theJson, Type type) => JsonConvert.DeserializeObject(theJson, type, GetJsonSerializerSettings())!;
+    public static string Serialize(object theObject) => JsonSerializer.Serialize(theObject, GetJsonSerializerOptions());
+    public static T Deserialize<T>(string theJson) => JsonSerializer.Deserialize<T>(theJson, GetJsonSerializerOptions())!;
+    public static object? Deserialize(string theJson, Type type) => JsonSerializer.Deserialize(theJson, type, GetJsonSerializerOptions());
     public static void RegisterConverter(JsonConverter converter) => Converters.Add(converter);
     public static void RegisterConverters(IEnumerable<JsonConverter> converters)
     {
@@ -23,16 +24,16 @@ public static class JsonSerialization
             RegisterConverter(converter);
         }
     }
-    public static void ResetConverters() => Converters = [new Newtonsoft.Json.Converters.StringEnumConverter()];
-    private static JsonConverterCollection Converters = [new Newtonsoft.Json.Converters.StringEnumConverter()];
+    public static void ResetConverters() => Converters = [new JsonStringEnumConverter()];
+    private static List<JsonConverter> Converters = [new JsonStringEnumConverter()];
 
-    public static JsonSerializerSettings GetJsonSerializerSettings()
+    public static JsonSerializerOptions GetJsonSerializerOptions()
     {
-        return new JsonSerializerSettings{
-            Converters = Converters, 
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = ContractResolver
-        };
+        var options = new JsonSerializerOptions(DefaultOptions);
+        foreach (var converter in Converters)
+        {
+            options.Converters.Add(converter);
+        }
+        return options;
     }
-
 }

@@ -1,6 +1,4 @@
 ﻿using BDD;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Shouldly;
 
 namespace Testing;
@@ -18,34 +16,33 @@ public partial class SerializationShould : Specification
         public string? WibbleWobble { get; set; }
     }
     
-    [JsonConverter(typeof(CustomTestObject2Converter))]
-    private class AnotherTestObject
+    public class AnotherTestObject
     {
         public TestEnum Enum { get; set; }
         public string? WibbleWobble { get; set; }
     }
     
-    private enum TestEnum
+    public enum TestEnum
     {
         Value1,
         Value2
     }
     
-    public class CustomTestObject2Converter : JsonConverter
+    public class CustomTestObject2Converter : System.Text.Json.Serialization.JsonConverter<AnotherTestObject>
     {
-        public override bool CanConvert(Type T)
+        public override bool CanConvert(Type typeToConvert)
         {
-            return T.IsSubclassOf(typeof(TestObject));
+            return typeToConvert.IsSubclassOf(typeof(TestObject)) || typeToConvert == typeof(AnotherTestObject);
         }
 
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            writer.WriteValue("Value1");
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        public override AnotherTestObject? Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
         {
             throw new ArgumentException();
+        }
+
+        public override void Write(System.Text.Json.Utf8JsonWriter writer, AnotherTestObject value, System.Text.Json.JsonSerializerOptions options)
+        {
+            writer.WriteStringValue("Value1");
         }
     }
 
