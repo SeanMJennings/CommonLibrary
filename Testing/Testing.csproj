@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Testing.Bdd" Version="1.0.3" />
+      <PackageReference Include="Testing.Bdd" Version="1.0.4" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
       <PackageReference Include="Moq.Contrib.HttpClient" Version="1.4.0" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
