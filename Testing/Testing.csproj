@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Testing.Bdd" Version="1.0.4" />
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+      <PackageReference Include="Testing.Bdd" Version="1.0.11" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
       <PackageReference Include="Moq.Contrib.HttpClient" Version="1.4.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
     </ItemGroup>
 
     <ItemGroup>
